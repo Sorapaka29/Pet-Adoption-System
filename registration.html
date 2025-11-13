@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+        <script type="text/javascript">
+            emailjs.init('sshVLsStF7gJnAi2v');
+        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pet Adoption Registration</title>
+        <style>
+            body {
+    font-family: Arial, sans-serif;
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    margin: 50;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin-top: 300px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    text-align: center;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+#close:hover,
+#close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+        </style>
+        <script>
+            function validatePassword() {
+                var password = document.getElementById("password").value;
+                var confirmPassword = document.getElementById("confirmPassword").value;
+                var errorMessage = document.getElementById("error-message");
+                var minLength = 8;
+                var hasUppercase = /[A-Z]/.test(password);
+                var hasLowercase = /[a-z]/.test(password);
+                var hasNumber = /\d/.test(password);
+                var hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+                if (password !== confirmPassword) {
+                    errorMessage.textContent = "Passwords do not match!";
+                    return false;
+                }
+                if (password.length < minLength) {
+                    errorMessage.textContent = "Password must be at least " + minLength + " characters long!";
+                    return false;
+                }
+                if (!hasUppercase) {
+                    errorMessage.textContent = "Password must contain at least one uppercase letter!";
+                    return false;
+                }
+                if (!hasLowercase) {
+                    errorMessage.textContent = "Password must contain at least one lowercase letter!";
+                    return false;
+                }
+                if (!hasNumber) {
+                    errorMessage.textContent = "Password must contain at least one number!";
+                    return false;
+                }
+                if (!hasSpecialChar) {
+                    errorMessage.textContent = "Password must contain at least one special character!";
+                    return false;
+                }
+
+                errorMessage.textContent = "";
+                return true;
+            }
+
+            var email = "";
+            function enterEmail(){
+                email = document.getElementById('email').value;
+            }
+
+            var otp = Math.floor((Math.random() * 1000000 + 100000) % 9999999);
+            function sendOTP(){
+                document.getElementById("otp").style.display = "initial";
+                document.getElementById("sendotpbutton").style.display = "none";
+                document.getElementById("verifyotpbutton").style.display  ="initial";
+                otp = String(otp);
+                   //alert(otp);            
+                emailjs.send("service_rx5hg8o","template_8ozgppa",{
+                    OTP: otp,
+                    toEmail: email,
+                });
+                
+            }
+
+            function submitOTP(){
+                if(parseInt(document.getElementById("otp").value) == otp){
+                    alert("Email verified!");
+                    document.getElementById("verifyotpbutton").style.display  ="none";
+                    document.getElementById("otp").style.display = "none";
+                    document.getElementById("OTPverfied").value = "OTPverified";
+                } else {
+                    alert("Incorrect OTP");
+                }
+            }
+
+            function validateForm() {
+                return validatePassword(); // Call the password validation function before form submission
+            }
+        </script>
+    </head>
+    <body background="h.jpg">
+        <div class="container">
+            <h2>Pet Adoption Registration</h2>
+            <form action="reg.php" method="post" onsubmit="return validateForm();">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required>
+                
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required oninput="enterEmail()">
+                
+                <input id="sendotpbutton" type="button" value="Send OTP" onclick="sendOTP()">
+                <br>
+                <input style="display: none;" type="text" name="otp" id="otp" placeholder="Enter OTP">
+                <input style="display: none;" id="verifyotpbutton" type="button" value="Verify" onclick="submitOTP()">
+                <input style="display: none;" id="OTPverfied" type="text" required>
+                <br>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+                <div class="error-message" id="error-message"></div>
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+                
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" required>
+                <br>
+                <input type="checkbox" style="display: inline; width: fit-content;" required><div style="display: inline;"> I agree to the <a href="terms.html">terms and conditions</a> </div>
+                <button type="submit">Register</button>
+            </form>
+            <div class="login-link">
+                Already have an account? <a href="petlogin.php">Login here</a>.
+            </div>
+        </div>
+    </body>
+</html>
